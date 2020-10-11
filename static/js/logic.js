@@ -4,7 +4,8 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(geodata) {
 
-    // console.log(earthquakeData);
+    // console.log(geodata);
+
     // Send features object from earthquateData to createFeatures fuction
     createFeatures(geodata.features);
 });
@@ -12,6 +13,28 @@ d3.json(queryUrl, function(geodata) {
 // Function to create geoJSON layer and popup box
 function createFeatures(earthquakeData) {
     // console.log(earthquakeData);
+
+// FIXED THIS LATER
+var geojson = L.choropleth(geodata, {
+    // Define what  property in the features to use
+    valueProperty: "MHI2016",
+
+    // Set color scale
+    scale: ["#ffffb2", "#b10026"],
+
+    // Number of breaks in step range
+    steps: 10,
+
+    // q for quartile, e for equidistant, k for k-means
+    mode: "q",
+    style: {
+      // Border color
+      color: "#fff",
+      weight: 1,
+      fillOpacity: 0.8
+    },
+
+// FIXED THIS LATER
 
   // Define a function to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
@@ -21,6 +44,7 @@ function createFeatures(earthquakeData) {
 
     //   console.log(feature, layer);
   }
+}   
 //     feature.properties.mag --> give's the magnitude or just use .title for place & mag
 
   // Create a GeoJSON layer containing the features array on the earthquakeData object
@@ -77,7 +101,7 @@ function createMap(earthquakes) {
 
   // Create our map, giving it the satellite map and techtonic plates + earthquakes layers to display on load
   var myMap = L.map("mapid", {
-    center: [15.5994, -28.6731],
+    center: [55.3781, 3.436],
     zoom: 5,
     layers: [satellitemap, earthquakes]
   });
