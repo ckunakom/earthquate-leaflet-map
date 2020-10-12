@@ -23,22 +23,46 @@ d3.json(queryUrl, function(geodata) {
     console.log(geodata);
 
     // Color the marker according to the depth of the earthquake
-    function circleColor(feature) {
-        var color = "";
-        switch (color) {
-            case feature > 90: color = '#800026';
-            case feature >= 70: color = '#BD0026';
-            case feature >= 50: color = '#E31A1C';
-            case feature >= 30: color = '#FC4E2A';
-            case feature >= 10: color = '#FD8D3C';
-            default: color = '#FEB24C';
-        }
-    }
+    // function circleColor(feature) {
+    //     var color = "";
+    //     switch (color) {
+    //         case feature > 90: color = '#800026';
+    //         case feature >= 70: color = '#BD0026';
+    //         case feature >= 50: color = '#E31A1C';
+    //         case feature >= 30: color = '#FC4E2A';
+    //         case feature >= 10: color = '#FD8D3C';
+    //         default: color = '#FEB24C';
+    //     }
+    //     console.log(color);
+    // }
+
+    // function circleMarker(feature) {
+    //     return {
+    //         radius: 8,
+    //         fillColor: circleColor(feature.geometry.depth),
+    //         color: "#000",
+    //         weight: 1,
+    //         opacity: 1,
+    //         fillOpacity: 0.8
+    //     };
+    // }
 
     function circleMarker(feature) {
         return {
             radius: 8,
-            fillColor: circleColor(feature.geometry.depth),
+            fillColor: function(feature) {
+                
+                var depth = feature.geometry.depth;
+                // Change color to indicate the depth
+                switch (depth) {
+                    case depth > 90: return {color: '#800026'};
+                    case depth >= 70: return {color: '#BD0026'};
+                    case depth >= 50: return {color: '#E31A1C'};
+                    case depth >= 30: return {color: '#FC4E2A'};
+                    case depth >= 10: return {color: '#FD8D3C'};
+                    default: return {color: '#FEB24C'};
+                }
+            },
             color: "#000",
             weight: 1,
             opacity: 1,
@@ -62,7 +86,7 @@ d3.json(queryUrl, function(geodata) {
     L.geoJson(geodata, {
         // Turn data into circles
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, circleMarker(feature));
+            return L.circleMarker(latlng, circleMarker);
         },
         // Binding a pop-up to each layer
         onEachFeature: onEachFeature,

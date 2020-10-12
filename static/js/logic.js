@@ -53,10 +53,10 @@ function createFeatures(earthquakeData) {
         // FIXED THIS LATER
 
       // Test #2
-    // Define marker size
-    function markerSize(magnitude) {
-        return earthquakeData
-    }
+    // // Define marker size
+    // function markerSize(magnitude) {
+    //     return earthquakeData
+    // }
 
 
 
