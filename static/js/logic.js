@@ -4,7 +4,7 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(geodata) {
 
-    // console.log(geodata);
+    console.log(geodata);
 
     // Send features object from earthquateData to createFeatures fuction
     createFeatures(geodata.features);
@@ -15,26 +15,52 @@ function createFeatures(earthquakeData) {
     // console.log(earthquakeData);
 
 // FIXED THIS LATER
-var geojson = L.choropleth(geodata, {
-    // Define what  property in the features to use
-    valueProperty: "MHI2016",
 
-    // Set color scale
-    scale: ["#ffffb2", "#b10026"],
+    // var heatArray = [];
 
-    // Number of breaks in step range
-    steps: 10,
+    // for (var i = 0; i < earthquakeData.length; i++) {
+    //     var location = earthquakeData[i].location;
+    
+    //     if (location) {
+    //       heatArray.push([location.coordinates[1], location.coordinates[0]]);
+    //     }
+    //   }
+    
+    //   var heat = L.heatLayer(earthquakeData., {
+    //     radius: 10,
+    //     blur: 1
 
-    // q for quartile, e for equidistant, k for k-means
-    mode: "q",
-    style: {
-      // Border color
-      color: "#fff",
-      weight: 1,
-      fillOpacity: 0.8
-    },
 
-// FIXED THIS LATER
+    // var geojson = L.choropleth(geodata, {
+    //     // Define what  property in the features to use
+    //     valueProperty: "MHI2016",
+
+    //     // Set color scale
+    //     scale: ["#ffffb2", "#b10026"],
+
+    //     // Number of breaks in step range
+    //     steps: 10,
+
+    //     // q for quartile, e for equidistant, k for k-means
+    //     mode: "q",
+    //     style: {
+    //     // Border color
+    //     color: "#fff",
+    //     weight: 1,
+    //     fillOpacity: 0.8
+    //     },
+
+        // FIXED THIS LATER
+
+      // Test #2
+    // Define marker size
+    function markerSize(magnitude) {
+        return earthquakeData
+    }
+
+
+
+// Test #2
 
   // Define a function to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
@@ -44,7 +70,7 @@ var geojson = L.choropleth(geodata, {
 
     //   console.log(feature, layer);
   }
-}   
+
 //     feature.properties.mag --> give's the magnitude or just use .title for place & mag
 
   // Create a GeoJSON layer containing the features array on the earthquakeData object
@@ -102,7 +128,7 @@ function createMap(earthquakes) {
   // Create our map, giving it the satellite map and techtonic plates + earthquakes layers to display on load
   var myMap = L.map("mapid", {
     center: [55.3781, 3.436],
-    zoom: 5,
+    zoom: 3,
     layers: [satellitemap, earthquakes]
   });
   console.log(myMap);
@@ -113,29 +139,5 @@ function createMap(earthquakes) {
   }).addTo(myMap);
 }
 
-// // use heat layer to get the circles! class ex)
-// // NEED LEAFLET PLUG IN
-// // <!-- Leaflet heatmap plugin-->
-// // <script type="text/javascript" src="static/js/leaflet-heat.js"></script>
-// // d3.json(url).then(function(response) {
-
-// //     console.log(response);
-  
-// //     var heatArray = [];
-  
-// //     for (var i = 0; i < response.length; i++) {
-// //       var location = response[i].location;
-  
-// //       if (location) {
-// //         heatArray.push([location.coordinates[1], location.coordinates[0]]);
-// //       }
-// //     }
-  
-// //     var heat = L.heatLayer(heatArray, {
-// //       radius: 20,
-// //       blur: 35 -- use 1! or take radius 10 blur 3
-// //     }).addTo(myMap);
-  
-// //   });
 
 ////////-------------------------------------------------
