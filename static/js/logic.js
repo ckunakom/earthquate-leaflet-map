@@ -1,3 +1,4 @@
+//====== BUILDING DEFAULT MAP ======//
 // Define grayscale, satellite and outdoors layers
 var grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -26,13 +27,10 @@ var outdoormap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles
 var myMap = L.map("mapid", {
     center: [37.0902, -95.7129],
     zoom: 3,
-    layers: [satellitemap, grayscalemap, outdoormap]
+    layers: [grayscalemap]
 });
 
-satellitemap.addTo(myMap);
-
-// Var earthquajes/techplates
-
+// Define the two layer groups
 var earthquakes = new L.LayerGroup();
 var techtonicplates = new L.LayerGroup();
 
@@ -54,34 +52,25 @@ L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
 }).addTo(myMap);
 
-
+//====== ADDING DATA TO THE MAP ======//
 // Store techtonic data URL inside variable
 var techtonicURL =  "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
-
-// L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-//     tileSize: 512,
-//     maxZoom: 18,
-//     zoomOffset: -1,
-//     id: "mapbox/streets-v11",
-//     accessToken: API_KEY
-// }).addTo(myMap);
-
+// Added techtonic plates data to the map
 d3.json(techtonicURL, function(plateData) {
 
+    // console.log(plateData)
+
     L.geoJson(plateData, {
-        color: 'black',
-        weight: 1
+        color: '#FF26A5',
+        weight: 2
     
     }).addTo(techtonicplates);
 
-    // Add techtonicplates
+    // Add techtonicplates data to map
     techtonicplates.addTo(myMap);
 
-})
-
-
+});
 
 // Store earthquate API endpoint inside variable
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
@@ -89,7 +78,7 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 // // Perform a GET request to the query URL
 d3.json(queryUrl, function(geodata) {
 
-    console.log(geodata);
+    // console.log(geodata);
 
     // Function to create circle markers for the earthquake
     function circleMarker(feature) {
@@ -109,7 +98,7 @@ d3.json(queryUrl, function(geodata) {
         // Change radius to indicate the magnitude
         function size(r) {
             var rad = feature.properties.mag;
-            return rad / 0.3;
+            return rad / 0.4;
         }
 
         // Attribute to return for the circle markers
@@ -137,35 +126,33 @@ d3.json(queryUrl, function(geodata) {
         },
         // Binding a pop-up to each layer
         onEachFeature: onEachFeature,
+        // Adjust the radius according to the magnitude
         radius: geodata
     }).addTo(earthquakes);
 
+    // Add earthquake data to map
     earthquakes.addTo(myMap);
-
-
 });
 
-    // Set up the legend 
-    var legend = L.control({ position: "bottomright" });
+//====== ADDING DATA LEGEND TO THE MAP ======//
+// Set up the legend 
+var legend = L.control({ position: "bottomright" });
 
-    legend.onAdd = function() {
+legend.onAdd = function() {
 
-        // Creating div with 'legend' info id
-        var div = L.DomUtil.create("div", "info legend");
-        // Define colors and labels
-        var colors = ['#CE4D45', '#F19C65', '#FFD265', '#6be86f', '#2AA876', '#0A7B83']
-        var labels = [-10, 10, 30, 50, 70, 90];
+    // Creating div with 'legend' info id
+    var div = L.DomUtil.create("div", "info legend");
+    // Define colors and labels
+    var colors = ['#CE4D45', '#F19C65', '#FFD265', '#6be86f', '#2AA876', '#0A7B83']
+    var labels = [-10, 10, 30, 50, 70, 90];
 
-        for (var i = 0; i < labels.length; i++) {
-            div.innerHTML += "<i style='background: " + colors[i] + "'></i> " +
-                labels[i] + (labels[i + 1] ? "&ndash;" + labels[i + 1] + "<br>" : "+");
-        } 
+    for (var i = 0; i < labels.length; i++) {
+        div.innerHTML += "<i style='background: " + colors[i] + "'></i> " +
+            labels[i] + (labels[i + 1] ? "&ndash;" + labels[i + 1] + "<br>" : "+");
+    } 
     
-        return div
-    };
+    return div
+};
 
-    // Adding legend to the map
-    legend.addTo(myMap);
-
-
-
+// Adding legend to the map
+legend.addTo(myMap);
