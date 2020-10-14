@@ -47,22 +47,34 @@ d3.json(queryUrl, function(geodata) {
     //     };
     // }
 
+
+    // Function to create circle markers for the earthquake
     function circleMarker(feature) {
+
+        // Change color to indicate the depth
+        function color(d) {
+
+            var depth = feature.geometry.coordinates[2];
+            // console.log(depth);
+            if (depth > 90) return '#0A7B83';
+            else if (depth >= 70) return '#2AA876';
+            else if (depth >= 50) return '#6be86f';
+            else if (depth >= 30) return '#FFD265';
+            else if (depth >= 10) return '#F19C65';
+            else return '#CE4D45';
+        }
+
+        // Change radius to indicate the magnitude
+        function size(r) {
+
+            var rad = feature.properties.mag;
+            return rad / 0.3;
+        }
+
+        // Attribute to return for the circle markers
         return {
-            radius: 8,
-            fillColor: function(feature) {
-                
-                var depth = feature.geometry.depth;
-                // Change color to indicate the depth
-                switch (depth) {
-                    case depth > 90: return {color: '#800026'};
-                    case depth >= 70: return {color: '#BD0026'};
-                    case depth >= 50: return {color: '#E31A1C'};
-                    case depth >= 30: return {color: '#FC4E2A'};
-                    case depth >= 10: return {color: '#FD8D3C'};
-                    default: return {color: '#FEB24C'};
-                }
-            },
+            radius: size(feature),
+            fillColor: color(feature),
             color: "#000",
             weight: 1,
             opacity: 1,
@@ -80,20 +92,20 @@ d3.json(queryUrl, function(geodata) {
     // };
     
     function onEachFeature(feature, layer) {    
-        layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p><p>Magnitude: ${feature.properties.mag}</p>`);
+        layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><strong>Magnitude</strong>: ${feature.properties.mag}<br>
+        <strong>Depth</strong>: ${feature.geometry.coordinates[2]}<br>
+        ${new Date(feature.properties.time)}`);
     }
 
     L.geoJson(geodata, {
         // Turn data into circles
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, circleMarker);
+            return L.circleMarker(latlng, circleMarker(feature));
         },
         // Binding a pop-up to each layer
         onEachFeature: onEachFeature,
         radius: geodata
     }).addTo(myMap);
-
-
 
 
 });
