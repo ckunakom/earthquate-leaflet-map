@@ -23,13 +23,6 @@ var outdoormap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles
     accessToken: API_KEY
 });
 
-// Create map object
-var myMap = L.map("mapid", {
-    center: [37.0902, -95.7129],
-    zoom: 3,
-    layers: [grayscalemap]
-});
-
 // Define the two layer groups
 var earthquakes = new L.LayerGroup();
 var techtonicplates = new L.LayerGroup();
@@ -46,6 +39,13 @@ var overlayMaps = {
     "Techtonic Plates": techtonicplates,
     "Earthquakes": earthquakes,
 };
+
+// Create map object
+var myMap = L.map("mapid", {
+    center: [37.0902, -95.7129],
+    zoom: 3,
+    layers: [grayscalemap]
+});
 
 // Create a layer control with baseMaps and overlayMaps
 L.control.layers(baseMaps, overlayMaps, {
