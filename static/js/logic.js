@@ -42,8 +42,8 @@ var overlayMaps = {
 
 // Create map object
 var myMap = L.map("mapid", {
-    center: [37.0902, -95.7129],
-    zoom: 3,
+    center: [23.916221, 21.841995],
+    zoom: 2.45,
     layers: [grayscalemap]
 });
 
@@ -114,7 +114,9 @@ d3.json(queryUrl, function(geodata) {
 
     // Function to create pop-up information about the earthquake
     function onEachFeature(feature, layer) {    
-        layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><strong>Magnitude</strong>: ${feature.properties.mag}<br>
+        layer.bindPopup(`<h5>${feature.properties.title}</h5><hr>
+        <strong>Location</strong>: ${feature.properties.place}<br>
+        <strong>Magnitude</strong>: ${feature.properties.mag}<br>
         <strong>Depth</strong>: ${feature.geometry.coordinates[2]}<br>
         <strong>Date & Time</strong>: ${new Date(feature.properties.time)}`);
     }
